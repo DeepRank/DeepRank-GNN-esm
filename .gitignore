@@ -1,0 +1,28 @@
+#Byte-compiled / optimized
+*__pycache__*
+
+# distribution
+deeprank_gnn.egg-info
+DeepRank_GNN.egg-info
+build/*
+dist/*
+
+# datafile
+*.pdb
+*.db
+*.izone
+*.lzone
+*.ref_pairs
+
+# hdf5
+*.hdf5
+*.tar
+
+# test
+htmlcov
+.coverage
+covergage.xml
+
+# doc
+docs/_build
+docs/apidocs

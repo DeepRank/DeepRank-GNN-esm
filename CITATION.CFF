@@ -1,0 +1,30 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1
+title: DeepRank-GNN-esm
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Xiaotong
+    family-names: Xu
+    email: x.xu1@uu.nl
+    affiliation: Utrecht University
+identifiers:
+  - type: url
+    value: ''
+    description: 'https://github.com/DeepRank/Deeprank-GNN-esm'
+repository-code: 'https://github.com/DeepRank/Deeprank-GNN-esm'
+abstract: >-
+  DeepRank-GNN-esm is the upgraded version of the
+  DeepRank-GNN algorithm for ranking PPI complexes 
+  with graph neural networks. DeepRank-GNN-esm utilizes 
+  protein language model embeddings instead of PSSM 
+  features. 
+keywords:
+  - graph neural network
+  - protein-protein interface
+  - protein language model
+license: Apache-2.0
