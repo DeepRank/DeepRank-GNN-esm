@@ -129,7 +129,6 @@ class NeuralNet(object):
         test_dataset = HDF5DataSet(
             name="Test",
             root="./",
-            name = 'Test'
             database=database,
             node_feature=self.node_feature,
             edge_feature=self.edge_feature,
