@@ -38,6 +38,13 @@ setup(
     ],
     test_suite='tests',
 
+
+    install_requires=[
+        'numpy >= 1.13', 'scipy', 'h5py', 'networkx', 'matplotlib',
+        'pdb2sql', 'sklearn', 'chart-studio', 'BioPython', 'python-louvain',
+        'markov-clustering', 'tqdm', 'freesasa'
+    ],
+
     # not sure if the install of torch-geometric will work ..
     extras_require={
         'dev': ['prospector[with_pyroma]', 'yapf', 'isort'],
