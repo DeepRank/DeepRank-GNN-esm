@@ -10,7 +10,7 @@ class TestTools(unittest.TestCase):
 
     def setUp(self):
 
-        self.pdb_path = 'data/pdb/1ATN/'
+        self.pdb_path = 'pdb/1ATN/'
         self.pssm_path = 'data/pssm/1ATN/1ATN.A.pdb.pssm'
         self.h5_train_ref = 'data/train_ref/train_data.hdf5'
         self.h5_graphs = 'hdf5/1ATN_residue.hdf5'

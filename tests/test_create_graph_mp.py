@@ -5,7 +5,7 @@ from deeprank_gnn.GraphGenMP import GraphHDF5
 
 class TestCreateGraph(unittest.TestCase):
     def setUp(self):
-        self.pdb_path = "data/pdb/1ATN/"
+        self.pdb_path = "pdb/1ATN/"
         self.pssm_path = "data/pssm/1ATN/"
         self.ref_path = "data/ref/1ATN/"
         self.embeddings_path = "data/embeddings/1ATN/"

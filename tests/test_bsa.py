@@ -6,7 +6,7 @@ from deeprank_gnn.tools.BSA import BSA
 class TestBSA(unittest.TestCase):
 
     def setUp(self):
-        self.bsa = BSA('data/pdb/1ATN/1ATN_1w.pdb')
+        self.bsa = BSA('pdb/1ATN/1ATN_1w.pdb')
 
     def test_structure(self):
         self.bsa.get_structure()

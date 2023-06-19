@@ -10,8 +10,8 @@ class TestGraph(unittest.TestCase):
     def setUp(self):
         self.graph = Graph()
         self.graph.h52nx('hdf5/1ATN_residue.hdf5', '1ATN_1w')
-        self.graph.pdb = 'data/pdb/1ATN/1ATN_1w.pdb'
-        self.ref = 'data/pdb/1ATN/1ATN_2w.pdb'
+        self.graph.pdb = 'pdb/1ATN/1ATN_1w.pdb'
+        self.ref = 'pdb/1ATN/1ATN_2w.pdb'
 
     def test_score(self):
         self.graph.get_score(self.ref)
