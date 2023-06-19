@@ -15,7 +15,7 @@ with open('README.md') as readme_file:
     readme = readme_file.read()
 
 setup(
-    name='DeepRank-GNN',
+    name='DeepRank-GNN-esm',
     version=version['__version__'],
     description='Graph Neural network Scoring of protein-protein conformations with Protein Language Model',
     long_description=readme + '\n\n',
@@ -40,7 +40,7 @@ setup(
 
 
     install_requires=[
-        'numpy >= 1.13', 'scipy', 'h5py', 'networkx', 'matplotlib',
+        'numpy >= 1.13', 'scipy', 'h5py', 'networkx == 2.8.4', 'matplotlib',
         'pdb2sql', 'sklearn', 'chart-studio', 'BioPython', 'python-louvain',
         'markov-clustering', 'tqdm', 'freesasa'
     ],
