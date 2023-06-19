@@ -155,7 +155,7 @@ class ResidueGraph(Graph):
         # iencod += 1
 
         # check if external execs are installed
-        self.check_execs()
+        #self.check_execs()
 
         # create the sqldb
         db = interface(self.pdb)

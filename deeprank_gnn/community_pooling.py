@@ -145,8 +145,8 @@ def community_detection(edge_index, num_nodes, edge_attr=None, method="mcl"):
     # detect the communities using MCL detection
     elif method == "mcl":
 
-        # matrix = nx.to_scipy_sparse_matrix(g)
-        matrix = csr_matrix(nx.adjacency_matrix(g))
+        matrix = nx.to_scipy_sparse_matrix(g)
+        #matrix = csr_matrix(nx.adjacency_matrix(g))
 
         # run MCL with default parameters
         result = mc.run_mcl(matrix)

@@ -41,7 +41,7 @@ class GraphHDF5(object):
             ref_path (str, optional): path to the reference model. Defaults to None.
             graph_type (str, optional): Defaults to 'residue'.
             pssm_path ([type], optional): path to the pssm file. Defaults to None.
-            embedding_path ([type], optional): path to the embedding file. Defaults to None.
+            embedding_path ([type], optional): path to the esm embedding file. Defaults to None.
             select (str, optional): filter files that starts with 'input'. Defaults to None.
             outfile (str, optional): Defaults to 'graph.hdf5'.
             nproc (int, optional): number of processors. Default to 1.

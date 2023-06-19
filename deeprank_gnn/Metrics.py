@@ -110,7 +110,7 @@ class Metrics(object):
         self.target = target
         self.threshold = threshold
 
-        print("Threshold set to {}".format(self.threshold))
+        #print("Threshold set to {}".format(self.threshold))
 
         if self.binary == True:
             prediction_binary = get_binary(self.prediction, self.threshold, self.target)
