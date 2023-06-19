@@ -2,16 +2,24 @@
 Graph Network for protein-protein interface including language model features
 
 ## Installation
-Before installing DeepRank-GNN-esm you need to install pytorch, pytorch_geometric and esm_2 according to your needs. You can find detailled instructions here:
+Before installing DeepRank-GNN-esm you need to install pytorch, pytorch_geometric and esm_2 according to your needs. You can find detailed instructions here:
   * pytorch: https://pytorch.org/
   * pytorch_geometric: https://pytorch-geometric.readthedocs.io/en/latest/notes/installation.html
   * External library for pytorch_geometric can be installed by 
-  ```
-  pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-${TORCH}+${CUDA}.html
-  ```
-  Replace ${TORCH} and ${CUDA} by the specific PyTorch and CUDA versions of your system. 
+   ```
+   pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f 
+   https://data.pyg.org/whl/torch-${TORCH}+${CUDA}.html
+   ```
+   Replace ${TORCH} and ${CUDA} with the specific PyTorch and CUDA versions of your system. 
 
   * esm_2: https://github.com/facebookresearch/esm
+
+  * To install DeepRank-GNN-esm,
+    ```
+    git clone https://github.com/DeepRank/DeepRank-GNN-esm.git
+    cd Deeprank-GNN-esm/
+    pip install .
+    ```
 
 ## Generate graph
   * Example code to generate residue graphs in hdf5 format:
