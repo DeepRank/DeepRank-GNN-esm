@@ -24,9 +24,11 @@ Before installing DeepRank-GNN-esm you need to install pytorch, pytorch_geometri
 ## Generate graph
   * Example code to generate residue graphs in hdf5 format:
     ```
-    pdb_path = "./data/pdb/1ATN/"
-    pssm_path = "./data/pssm/1ATN/"
-    embedding_path = "./data/embedding/1ATN/"
+    from deeprank_gnn.GraphGenMP import GraphHDF5
+    
+    pdb_path = "tests/data/pdb/1ATN/"
+    pssm_path = "tests/data/pssm/1ATN/"
+    embedding_path = "tests/data/embedding/1ATN/"
     nproc = 20
     outfile = "1ATN_residue.hdf5"
 
@@ -41,6 +43,9 @@ Before installing DeepRank-GNN-esm you need to install pytorch, pytorch_geometri
     ```
   * Example code to add continuous or binary targets to the hdf5 file
     ```
+    import h5py
+    import random
+   
     hdf5_file = h5py.File('1ATN_residue.hdf5', "r+")
     for mol in hdf5_file.keys():
         fnat = random.random()
@@ -53,14 +58,19 @@ Before installing DeepRank-GNN-esm you need to install pytorch, pytorch_geometri
 ## Use pre-trained models to predict
   * Example code to use pre-trained DeepRank-GNN-esm model
   ```
-  database_test = "1ATN_residue.hdf5"
-  gnn = GINet
+  from deeprank_gnn.ginet import GINet
+  from deeprank_gnn.NeuralNet import NeuralNet
+
+  database_test = "1ATN_residue.hdf5" 
+  gnn = GINet 
   target = "fnat"
   edge_attr = ["dist"]
   threshold = 0.3
   pretrained_model = deeprank-GNN-esm/paper_pretrained_models/scoring_of_docking_models/gnn_esm/treg_yfnat_b64_e20_lr0.001_foldall_esm.pth.tar
   node_feature = ["type", "polarity", "bsa", "charge", "embedding"]
   device_name = "cuda:0"
+  num_workers = 10
+  
   model = NeuralNet(
       database_test,
       gnn,
@@ -68,8 +78,10 @@ Before installing DeepRank-GNN-esm you need to install pytorch, pytorch_geometri
       edge_feature = edge_attr,
       node_feature = node_feature,
       target = target,
+      num_workers = num_workers,
       pretrained_model = pretrained_model,
       threshold = threshold)
+
   model.test(hdf5 = "tmpdir/GNN_esm_prediction.hdf5")
   ```
 
