@@ -8,8 +8,7 @@ from deeprank_gnn.ginet import GINet
 def _model_base_test(database, model, task='reg', target='fnat', plot=False):
 
     NN = NeuralNet(database, model,
-                   node_feature=['type', 'polarity', 'bsa',
-                                 'depth', 'hse', 'ic', 'pssm',
+                   node_feature=['type', 'polarity', 'bsa', 'charge',
                                  'embedding'],
                    edge_feature=['dist'],
                    target=target,
@@ -24,7 +23,7 @@ def _model_base_test(database, model, task='reg', target='fnat', plot=False):
 
     NN.save_model('test.pth.tar')
 
-    NN_cpy = NeuralNet(database, model,
+    NN_cpy = NeuralNet(database, model, device_name='cuda:0',
                        pretrained_model='test.pth.tar')
 
     if plot:
@@ -37,11 +36,12 @@ def _model_base_test(database, model, task='reg', target='fnat', plot=False):
 class TestNeuralNet(unittest.TestCase):
 
     def setUp(self):
-        self.database = '../example/1AK4_residue.hdf5'
+        self.database = 'hdf5/1ATN_residue.hdf5'
 
     def test_ginet(self):
         _model_base_test(self.database, GINet, plot=True)
-
+    
+    
     def test_ginet_class(self):
         _model_base_test(self.database, GINet,
                          task='class', target='binclass')
