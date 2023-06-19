@@ -1,6 +1,8 @@
 ,epoch,set,model,targets,prediction
+,epoch,set,model,targets,prediction
 0,epoch_0005,eval,b'1ATN_6w',15.086999893188477,14.982015609741211
 1,epoch_0005,eval,b'1ATN_9w',15.555999755859375,15.066261291503906
+,epoch,set,model,targets,prediction
 0,epoch_0005,train,b'1ATN_4w',16.190000534057617,16.219572067260742
 1,epoch_0005,train,b'1ATN_5w',15.218999862670898,21.444379806518555
 2,epoch_0005,train,b'1ATN_3w',15.444000244140625,21.71331787109375

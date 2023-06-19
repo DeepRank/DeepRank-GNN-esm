@@ -10,10 +10,10 @@ class TestTools(unittest.TestCase):
 
     def setUp(self):
 
-        self.pdb_path = 'pdb/1ATN/'
+        self.pdb_path = 'data/pdb/1ATN/'
         self.pssm_path = 'data/pssm/1ATN/1ATN.A.pdb.pssm'
         self.h5_train_ref = 'data/train_ref/train_data.hdf5'
-        self.h5_graphs = 'hdf5/1ATN_residue.hdf5'
+        self.h5_graphs = '1ATN_residue.hdf5'
 
     def test_pssm_convert(self):
         pssm_3dcons_to_deeprank(self.pssm_path)
@@ -30,7 +30,18 @@ class TestTools(unittest.TestCase):
         with open('target.lst', 'w') as f:
             f.write(target_list)
 
+        bin_list = ''
+        for i in range(1, 11):
+            if i < 6:
+                bin_list += '1ATN_%dw %d\n' % (i, 1)
+            else:
+                bin_list += '1ATN_%dw %d\n' % (i, 0)
+
+        with open('target_class.lst', 'w') as f:
+            f.write(bin_list)
+
         add_target(self.h5_graphs, 'test_target', 'target.lst')
+        add_target(self.h5_graphs, 'test_target_class', 'bin_list')
 
     def test_embeding(self):
         pos = np.random.rand(110, 3)
