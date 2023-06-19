@@ -9,7 +9,7 @@ Before installing DeepRank-GNN-esm you need to install pytorch, pytorch_geometri
   ```
   pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-${TORCH}+${CUDA}.html
   ```
-  Repalce ${TORCH} and ${CUDA} by the specific PyTorch and CUDA versions of your system. 
+  Replace ${TORCH} and ${CUDA} by the specific PyTorch and CUDA versions of your system. 
 
   * esm_2: https://github.com/facebookresearch/esm
 
@@ -28,10 +28,10 @@ Before installing DeepRank-GNN-esm you need to install pytorch, pytorch_geometri
         embedding_path = embedding_path,
         graph_type = "residue",
         outfile = outfile,
-        nproc = nproc,
+        nproc = nproc,    #number of cores to use 
         tmpdir="./tmpdir")
     ```
-  * Example code to add contineous or binary targets to the hdf5 file
+  * Example code to add continuous or binary targets to the hdf5 file
     ```
     hdf5_file = h5py.File('1ATN_residue.hdf5', "r+")
     for mol in hdf5_file.keys():
@@ -50,7 +50,7 @@ Before installing DeepRank-GNN-esm you need to install pytorch, pytorch_geometri
   target = "fnat"
   edge_attr = ["dist"]
   threshold = 0.3
-  pretrained_model = eeprank-GNN-esm/paper_pretrained_models/scoring_of_docking_models/gnn_esm/treg_yfnat_b64_e20_lr0.001_foldall_esm.pth.tar
+  pretrained_model = deeprank-GNN-esm/paper_pretrained_models/scoring_of_docking_models/gnn_esm/treg_yfnat_b64_e20_lr0.001_foldall_esm.pth.tar
   node_feature = ["type", "polarity", "bsa", "charge", "embedding"]
   device_name = "cuda:0"
   model = NeuralNet(
