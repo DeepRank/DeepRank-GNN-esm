@@ -20,6 +20,11 @@ Before installing DeepRank-GNN-esm you need to install pytorch, pytorch_geometri
     cd Deeprank-GNN-esm/
     pip install .
     ```
+ * To test installation,
+   ```
+   cd tests/
+   pytest
+   ```
 
 ## Generate graph
   * Example code to generate residue graphs in hdf5 format:
