@@ -13,11 +13,11 @@ $ cd DeepRank-GNN-esm
 
 2. Install either the CPU or GPU version of DeepRank-GNN-esm
 ```bash
-$ conda env create -f environment-cpu.yml && conda activate deeprank-gnn-esm-cpu
+$ conda env create -f environment-cpu.yml && conda activate deeprank-gnn-esm-cpu-env
 ```
 OR
 ```bash
-$ conda env create -f environment-gpu.yml && conda activate deeprank-gnn-esm-gpu
+$ conda env create -f environment-gpu.yml && conda activate deeprank-gnn-esm-gpu-env
 ```
 
 3. Run the tests to make sure everything is working
