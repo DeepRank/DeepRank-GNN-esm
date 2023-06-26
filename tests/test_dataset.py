@@ -1,24 +1,26 @@
 import unittest
 from deeprank_gnn.DataSet import HDF5DataSet, DivideDataSet, PreCluster
+import os
 
+CWD = os.path.dirname(os.path.realpath(__file__))
 
 class TestDataSet(unittest.TestCase):
     def setUp(self):
-        self.database = "1ATN_residue.hdf5"
+        self.database = f'{CWD}/data/hdf5/1ATN_residue.hdf5'
 
     def test_dataset(self):
-        dataset = HDF5DataSet(
+        _ = HDF5DataSet(
             database=self.database,
-            node_feature=["type", "polarity", "bsa", "embedding"],
+            node_feature=["type", "polarity", "bsa", "embedding"], # type: ignore
             edge_feature=["dist"],
             target="fnat",
             index=None,
         )
 
     def test_dataset_filter(self):
-        dataset = HDF5DataSet(
+        _ = HDF5DataSet(
             database=self.database,
-            node_feature=["type", "polarity", "bsa", "embedding"],
+            node_feature=["type", "polarity", "bsa", "embedding"], # type: ignore
             edge_feature=["dist"],
             target="fnat",
             index=None,
