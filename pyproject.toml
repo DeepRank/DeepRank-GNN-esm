@@ -1,0 +1,25 @@
+[tool]
+name = "deeprank-gnn-esm"
+version = "0.1.0"
+description = "Graph Network for protein-protein interface including language model features"
+authors = ["Xiaotong Xu <x.xu1@uu.nl>"]
+readme = "README.md"
+license = "Apache 2.0"
+classifiers=[
+    'Development Status :: 2 - Pre-Alpha',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: Apache Software License',
+    'Natural Language :: English', 'Programming Language :: Python :: 3.9',
+    'Topic :: Scientific/Engineering :: Chemistry'
+]
+keywords = []
+include = [
+    "LICENSE",
+    "README.md",
+]
+
+[tool.dependencies]
+
+[tool.dev-dependencies]
+
+[tool.scripts]

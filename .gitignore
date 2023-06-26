@@ -26,3 +26,6 @@ covergage.xml
 # doc
 docs/_build
 docs/apidocs
+
+# venv
+.venv
