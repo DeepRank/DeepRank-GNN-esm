@@ -1,4 +1,3 @@
-
 import unittest
 import torch
 import numpy as np
@@ -15,8 +14,8 @@ class TestCommunity(unittest.TestCase):
         self.x = torch.tensor(
             [[0], [1], [2], [3], [4], [5]], dtype=torch.float)
         self.data = Data(x=self.x, edge_index=self.edge_index)
-        self.data.pos = torch.tensor(
-            np.random.rand(self.data.num_nodes, 3))
+        self.data.pos = torch.tensor( # type: ignore
+            np.random.rand(self.data.num_nodes, 3)) # type: ignore
 
     def test_detection_mcl(self):
         c = community_detection(
@@ -44,7 +43,7 @@ class TestCommunity(unittest.TestCase):
             self.data.num_nodes, method='louvain')
 
     @unittest.expectedFailure
-    def test_detection_per_batch_louvain(self):
+    def test_detection_per_batch_louvain_failure(self):
         batch = Batch().from_data_list([self.data, self.data])
         c = community_detection_per_batch(
             self.data.edge_index, torch.as_tensor([0, 1, 2, 3, 4, 5]),
