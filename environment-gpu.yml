@@ -1,4 +1,4 @@
-name: deeprank-gnn-esm-gpu
+name: deeprank-gnn-esm-gpu-env
 channels:
   - pytorch
   - pyg
