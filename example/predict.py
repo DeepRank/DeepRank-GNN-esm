@@ -1,5 +1,6 @@
 import h5py
 import random
+import torch
 
 from deeprank_gnn.GraphGenMP import GraphHDF5
 from deeprank_gnn.ginet import GINet
@@ -15,13 +16,13 @@ def create_graph():
     outfile = "1ATN_residue.hdf5"
 
     GraphHDF5(
-        pdb_path = pdb_path,
-        pssm_path = pssm_path,
-        embedding_path = embedding_path,
-        graph_type = "residue",
-        outfile = outfile,
-        nproc = nproc,
-        tmpdir = "./tmpdir",
+        pdb_path=pdb_path,
+        pssm_path=pssm_path,
+        embedding_path=embedding_path,
+        graph_type="residue",
+        outfile=outfile,
+        nproc=nproc,
+        tmpdir="./tmpdir",
     )
 
 
@@ -44,22 +45,12 @@ def predict(model):
     target = "fnat"
     edge_attr = ["dist"]
     threshold = 0.3
+    device_name = "cuda:0" if torch.cuda.is_available() else "cpu"
     if model == "gnn_esm":
         pretrained_model = "../paper_pretrained_models/scoring_of_docking_models/gnn_esm/treg_yfnat_b64_e20_lr0.001_foldall_esm.pth.tar"
         node_feature = ["type", "polarity", "bsa", "charge", "embedding"]
-        device_name = "cpu"
-        model = NeuralNet(
-            database_test,
-            gnn,
-            device_name = device_name,
-            edge_feature = edge_attr,
-            node_feature = node_feature,
-            target = target,
-            pretrained_model = pretrained_model,
-            threshold = threshold,
-        )
-        model.test(hdf5 = "tmpdir/GNN_esm_prediction.hdf5")
-    if model == "gnn_esm_pssm":
+        output = "tmpdir/GNN_esm_prediction.hdf5"
+    elif model == "gnn_esm_pssm":
         pretrained_model = "../paper_pretrained_models/scoring_of_docking_models/gnn_esm_pssm/treg_yfnat_b50_e20_lr0.001_foldall_esm_pssm.pth.tar"
         node_feature = [
             "type",
@@ -71,18 +62,18 @@ def predict(model):
             "cons",
             "ic",
         ]
-        device_name = "cuda:0"
-        model = NeuralNet(
-            database_test,
-            gnn,
-            device_name = device_name,
-            edge_feature = edge_attr,
-            node_feature = node_feature,
-            target = target,
-            pretrained_model = pretrained_model,
-            threshold = threshold,
-        )
-        model.test(hdf5 = "tmpdir/GNN_esm_pssm_prediction.hdf5")
+        output = "tmpdir/GNN_esm_pssm_prediction.hdf5"
+    model = NeuralNet(
+        database_test,
+        gnn,
+        device_name=device_name,
+        edge_feature=edge_attr,
+        node_feature=node_feature,
+        target=target,
+        pretrained_model=pretrained_model,
+        threshold=threshold,
+    )
+    model.test(hdf5=output)
 
 
 def main():
@@ -94,3 +85,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
