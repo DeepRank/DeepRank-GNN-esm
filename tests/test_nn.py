@@ -36,7 +36,7 @@ def _model_base_test(database, model, task='reg', target='test_target', plot=Fal
 class TestNeuralNet(unittest.TestCase):
 
     def setUp(self):
-        self.database = '1ATN_residue.hdf5'
+        self.database = 'data/1ATN_residue.hdf5'
 
     def test_ginet(self):
         _model_base_test(self.database, GINet)
