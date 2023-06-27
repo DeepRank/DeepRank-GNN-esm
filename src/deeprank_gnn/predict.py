@@ -77,7 +77,7 @@ def pdb_to_fasta(pdb_file_path: Path, main_fasta_fh: TextIOWrapper) -> None:
         main_fasta_fh.write(f">{root}.{chain.id}\n{sequence}\n")
 
 
-def get_embedding(fasta_file: str, output_dir: Path) -> None:
+def get_embedding(fasta_file: Path, output_dir: Path) -> None:
     """
     Get the embedding of a protein sequence.
 
@@ -262,11 +262,12 @@ def main():
     pdb_file = dst
 
     ## PDB to FASTA
-    with open(f"{workspace_path}/all.fasta", "w") as f:
+    fasta_f = Path(workspace_path) / "all.fasta"
+    with open(fasta_f, "w") as f:
         pdb_to_fasta(pdb_file_path=Path(pdb_file), main_fasta_fh=f)
 
     ## Generate embeddings
-    get_embedding(fasta_file="all.fasta", output_dir=workspace_path)
+    get_embedding(fasta_file=fasta_f, output_dir=workspace_path)
 
     ## Generate graphs
     graph = create_graph(pdb_path=pdb_file.parent, workspace_path=workspace_path)
