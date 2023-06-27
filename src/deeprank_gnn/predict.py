@@ -34,7 +34,7 @@ log.addHandler(ch)
 # Constants
 # TODO: Make these configurable
 ESM_MODEL = "esm2_t33_650M_UR50D"
-GNN_ESM_MODEL = "/home/rodrigo/repos/DeepRank-GNN-esm/paper_pretrained_models/scoring_of_docking_models/gnn_esm/treg_yfnat_b64_e20_lr0.001_foldall_esm.pth.tar"
+GNN_ESM_MODEL = "paper_pretrained_models/scoring_of_docking_models/gnn_esm/treg_yfnat_b64_e20_lr0.001_foldall_esm.pth.tar"
 TOKS_PER_BATCH = 4096
 REPR_LAYERS = [0, 32, 33]
 TRUNCATION_SEQ_LENGTH = 1022
@@ -262,7 +262,7 @@ def main():
     pdb_file = dst
 
     ## PDB to FASTA
-    with open("all.fasta", "w") as f:
+    with open(f"{workspace_path}/all.fasta", "w") as f:
         pdb_to_fasta(pdb_file_path=Path(pdb_file), main_fasta_fh=f)
 
     ## Generate embeddings

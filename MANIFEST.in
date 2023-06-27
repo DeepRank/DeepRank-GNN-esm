@@ -1,2 +1,3 @@
 include LICENSE
 include README.rst
+include paper_pretrained_models/scoring_of_docking_models/gnn_esm/treg_yfnat_b64_e20_lr0.001_foldall_esm.pth.tar
