@@ -23,7 +23,6 @@ jobs:
         activate-environment: anaconda-test-env
         environment-file: environment-cpu.yml
         python-version: 3.9
-        condarc-file: etc/example-condarc.yml
         auto-activate-base: false
 
     - run: pytest tests/
