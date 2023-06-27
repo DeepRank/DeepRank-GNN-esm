@@ -1,4 +1,4 @@
-name: deeprank-gnn-esm-gpu-env
+name: deeprank-gnn-esm-gpu
 channels:
   - pytorch
   - pyg
@@ -159,6 +159,7 @@ dependencies:
   - pip:
       - chart-studio==1.1.0
       - exceptiongroup==1.1.1
+      - fair-esm==2.0.0
       - freesasa==2.2.0.post3
       - iniconfig==2.0.0
       - markov-clustering==0.0.6.dev0
