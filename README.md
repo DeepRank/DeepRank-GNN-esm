@@ -1,3 +1,5 @@
+[![build](https://github.com/haddocking/DeepRank-GNN-esm/actions/workflows/build.yml/badge.svg)](https://github.com/haddocking/DeepRank-GNN-esm/actions/workflows/build.yml)
+
 # DeepRank-GNN-esm
 Graph Network for protein-protein interface including language model features
 
