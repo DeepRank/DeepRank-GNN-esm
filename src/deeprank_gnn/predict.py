@@ -5,7 +5,6 @@ import os
 import shutil
 import re
 import tempfile
-import uuid
 import warnings
 from io import TextIOWrapper
 from pathlib import Path
@@ -47,7 +46,7 @@ NPROC = mp.cpu_count() - 1 if mp.cpu_count() > 1 else 1
 def setup_workspace(identificator: str) -> Path:
     """Create a temporary directory for storing intermediate files."""
     cwd = Path.cwd()
-    workspace = cwd / "DEBUG" / identificator
+    workspace = cwd / identificator
 
     log.info(f"Setting up workspace - {workspace}")
     workspace.mkdir(parents=True, exist_ok=True)
@@ -253,7 +252,7 @@ def main():
 
     pdb_file = args.pdb_file
 
-    identificator = uuid.uuid4().hex[:6]
+    identificator = Path(pdb_file).stem + "-gnn_esm_pred"
     workspace_path = setup_workspace(identificator)
 
     # Copy PDB file to workspace
@@ -278,8 +277,8 @@ def main():
     ## Present the results
     parse_output(csv_output=csv_output, workspace_path=workspace_path)
 
-    ## Clean workspace
-    shutil.rmtree(workspace_path)
+    # ## Clean workspace
+    # shutil.rmtree(workspace_path)
 
 
 if __name__ == "__main__":
