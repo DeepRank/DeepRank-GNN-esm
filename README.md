@@ -49,40 +49,47 @@ optional arguments:
   -h, --help  show this help message and exit
 ```
 
-Example, score the `2oob` complex
+Example, score the `1B6C` complex
 
 ```bash
 # download it
-$ wget https://files.rcsb.org/view/2OOB.pdb -q
+$ wget https://files.rcsb.org/view/1B6C.pdb -q
 
 # make sure the environment is activated
-$ conda activate deeprank-gnn-esm-cpu-env
-(deeprank-gnn-esm-cpu-env) $ deeprank-gnn-esm-predict 2OOB.pdb
- 2023-06-27 16:39:06,864 predict:51 INFO - Setting up workspace - /home/rodrigo/repos/DeepRank-GNN-esm/2OOB-gnn_esm_pred
- 2023-06-27 16:39:06,865 predict:60 INFO - Reading sequence of PDB 2OOB.pdb
- 2023-06-27 16:39:06,873 predict:86 INFO - Generating embedding for protein sequence.
- 2023-06-27 16:39:06,873 predict:87 INFO - ################################################################################
- 2023-06-27 16:39:10,740 predict:102 INFO - Read all.fasta with 2 sequences
- 2023-06-27 16:39:10,742 predict:112 INFO - Processing 1 of 1 batches (2 sequences)
- 2023-06-27 16:39:11,955 predict:155 INFO - ################################################################################
- 2023-06-27 16:39:11,974 predict:160 INFO - Generating graph, using 23 processors
-# ...
- 2023-06-27 16:39:12,831 predict:233 INFO - Predicted fnat for 2OOB: 0.899
- 2023-06-27 16:39:12,831 predict:243 INFO - Output written to /home/rodrigo/repos/DeepRank-GNN-esm/2OOB-gnn_esm_pred/output.csv
+$ conda activate deeprank-gnn-esm-gpu-env
+(deeprank-gnn-esm-gpu-env) $ deeprank-gnn-esm-predict 1B6C.pdb
+ 2023-06-28 06:08:21,889 predict:64 INFO - Setting up workspace - /home/DeepRank-GNN-esm/1B6C-gnn_esm_pred
+ 2023-06-28 06:08:21,945 predict:72 INFO - Renumbering PDB file.
+ 2023-06-28 06:08:22,294 predict:104 INFO - Reading sequence of PDB 1B6C.pdb
+ 2023-06-28 06:08:22,423 predict:131 INFO - Generating embedding for protein sequence.
+ 2023-06-28 06:08:22,423 predict:132 INFO - ################################################################################
+ 2023-06-28 06:08:32,447 predict:138 INFO - Transferred model to GPU
+ 2023-06-28 06:08:32,450 predict:147 INFO - Read /home/DeepRank-GNN-esm/1B6C-gnn_esm_pred/all.fasta with 8 sequences
+ 2023-06-28 06:08:32,459 predict:157 INFO - Processing 1 of 2 batches (4 sequences)
+ 2023-06-28 06:08:34,061 predict:157 INFO - Processing 2 of 2 batches (4 sequences)
+ 2023-06-28 06:08:36,462 predict:200 INFO - ################################################################################
+ 2023-06-28 06:08:36,470 predict:205 INFO - Generating graph, using 79 processors
+ Graphs added to the HDF5 file
+ Embedding added to the /home/DeepRank-GNN-esm/1B6C-gnn_esm_pred/graph.hdf5 file
+ 2023-06-28 06:09:03,345 predict:220 INFO - Graph file generated: /home/DeepRank-GNN-esm/1B6C-gnn_esm_pred/graph.hdf5
+ 2023-06-28 06:09:03,345 predict:226 INFO - Predicting fnat of protein complex.
+ 2023-06-28 06:09:03,345 predict:234 INFO - Using device: cuda:0
+ # ...
+ 2023-06-28 06:09:07,794 predict:280 INFO - Predicted fnat for 1B6C: 0.342
+ 2023-06-28 06:09:07,803 predict:290 INFO - Output written to /home/DeepRank-GNN-esm/1B6C-gnn_esm_pred/output.csv
 ```
 
-From the output above you can see that the predicted fnat for the 2oob complex is **0.899**, this information is also written to the `output.csv` file.
+From the output above you can see that the predicted fnat for the 1B6C complex is **0.342**, this information is also written to the `output.csv` file.
 
 The command above will generate a folder in the current working directory, containing the following:
 
 ```
-2OOB-gnn_esm_pred
-├── 2OOB.A.pt
-├── 2OOB.B.pt
-├── 2OOB.pdb
+1B6C-gnn_esm_pred
+├── 1B6C.A.pt
+├── 1B6C.B.pt
+├── 1B6C.pdb
 ├── GNN_esm_prediction.csv
 ├── GNN_esm_prediction.hdf5
-├── GNN_esm_prediction_001.hdf5
 ├── graph.hdf5
 └── output.csv
 ```
