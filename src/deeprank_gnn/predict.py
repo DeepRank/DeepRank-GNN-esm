@@ -11,6 +11,8 @@ from pathlib import Path
 import argparse
 import torch
 from Bio.PDB import PDBParser
+from Bio import PDB
+from Bio.PDB.Polypeptide import is_aa
 from esm import FastaBatchedDataset, pretrained
 
 from deeprank_gnn.ginet import GINet
@@ -19,7 +21,10 @@ from deeprank_gnn.NeuralNet import NeuralNet
 from deeprank_gnn.tools.hdf5_to_csv import hdf5_to_csv
 
 # Ignore some BioPython warnings
-warnings.filterwarnings("ignore")
+import warnings
+from Bio import BiopythonWarning
+
+warnings.filterwarnings("ignore", category=BiopythonWarning)
 
 # Configure logging
 log = logging.getLogger(__name__)
@@ -38,8 +43,16 @@ GNN_ESM_MODEL = "paper_pretrained_models/scoring_of_docking_models/gnn_esm/treg_
 TOKS_PER_BATCH = 4096
 REPR_LAYERS = [0, 32, 33]
 TRUNCATION_SEQ_LENGTH = 1022
-INCLUDE = ["mean"]
+INCLUDE = ["mean", "per_tok"]
 NPROC = mp.cpu_count() - 1 if mp.cpu_count() > 1 else 1
+BATCH_SIZE = 64
+DEVICE_NAME = "cuda" if torch.cuda.is_available() else "cpu" #configurable 
+
+'''
+added two parameters in NeuralNet: num_workers and batch_size 
+default batch_size is 32, default num_workers is 1 
+for both, the higher the faster but depend on gpu capacity, should be configurable too
+'''
 ###########################################################
 
 
@@ -54,6 +67,37 @@ def setup_workspace(identificator: str) -> Path:
     #     log.info(f"WARNING: {workspace} already exists!")
     return workspace
 
+def renumber_pdb(pdb_file_path: Path) -> None:
+    """Renumber PDB file starting from 1 with no gaps."""
+    log.info(f"Renumbering PDB file.")
+    parser = PDB.PDBParser(QUIET=True)
+    structure = parser.get_structure("pdb_structure", pdb_file_path)
+
+    chain_residue_map = {}
+    new_residue_number = 1
+
+    for model in structure:
+        for chain in model:
+            if chain.id not in chain_residue_map:
+                chain_residue_map[chain.id] = {}
+            
+            residue_number_map = {}
+            used_residue_numbers = set()
+
+            for residue in chain.get_residues():
+                while new_residue_number in used_residue_numbers:
+                    new_residue_number += 1
+                residue_number_map[residue.id[1]] = new_residue_number
+                used_residue_numbers.add(new_residue_number)
+                residue.id = (' ', new_residue_number, ' ')
+
+
+    # Save the modified structure to the same file path
+    with open(str(pdb_file_path), 'w') as new_pdb_file:
+        io = PDB.PDBIO()
+        io.set_structure(structure)
+        io.save(new_pdb_file)
+
 
 def pdb_to_fasta(pdb_file_path: Path, main_fasta_fh: TextIOWrapper) -> None:
     """Convert a PDB file to a FASTA file."""
@@ -61,13 +105,14 @@ def pdb_to_fasta(pdb_file_path: Path, main_fasta_fh: TextIOWrapper) -> None:
     parser = PDBParser()
     structure = parser.get_structure("structure", pdb_file_path)
 
-    for chain_id in ("A", "B"):
+    chain_ids = [chain.id for chain in structure[0]]
+    for chain_id in chain_ids:
         chain = structure[0][chain_id]
         sequence = ""
 
         # Get the sequence of the chain
         for residue in chain:
-            if residue.get_resname() == "HOH":
+            if not is_aa(residue.get_resname()):
                 continue
             sequence += residue.get_resname()
 
@@ -130,12 +175,12 @@ def get_embedding(fasta_file: Path, output_dir: Path) -> None:
                 result = {"label": label}
                 truncate_len = min(TRUNCATION_SEQ_LENGTH, len(strs[i]))
                 # Call clone on tensors to ensure tensors are not views into a larger representation
-                # See https://github.com/pytorch/pytorch/issues/1995
-                # if "per_tok" in args.include:
-                #     result["representations"] = {
-                #         layer: t[i, 1 : truncate_len + 1].clone()
-                #         for layer, t in representations.items()
-                #     }
+                #See https://github.com/pytorch/pytorch/issues/1995
+                if "per_tok" in INCLUDE:
+                    result["representations"] = {
+                        layer: t[i, 1 : truncate_len + 1].clone()
+                        for layer, t in representations.items()
+                    }
                 if "mean" in INCLUDE:
                     result["mean_representations"] = {
                         layer: t[i, 1 : truncate_len + 1].mean(0).clone()
@@ -197,6 +242,8 @@ def predict(input: str, workspace_path: Path) -> str:
         device_name=device_name,
         edge_feature=edge_attr,
         node_feature=node_feature,
+        num_workers=NPROC,
+        batch_size=BATCH_SIZE,
         target=target,
         pretrained_model=GNN_ESM_MODEL,
         threshold=threshold,
@@ -261,6 +308,9 @@ def main():
     shutil.copy(src, dst)
     pdb_file = dst
 
+    ## renumber PDB
+    renumber_pdb(pdb_file_path=pdb_file)
+    
     ## PDB to FASTA
     fasta_f = Path(workspace_path) / "all.fasta"
     with open(fasta_f, "w") as f:
