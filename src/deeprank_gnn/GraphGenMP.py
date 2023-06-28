@@ -223,7 +223,7 @@ class GraphHDF5(object):
                 else:
                     raise FileNotFoundError("PSSM file for " + mol_name + " not found")
         return pssm
-
+    
     @staticmethod
     def _add_embedding(outfile, pdbs, embedding_path):
         f = h5py.File(outfile, 'r+')
@@ -237,16 +237,19 @@ class GraphHDF5(object):
                 resID = residues[i][1].decode()
                 pt_name = mol + '.' + chainID + '.pt'
                 pt_path = os.path.join(embedding_path, pt_name)
-                res_number = int(resID) - GraphHDF5._get_starting_res(pdb_file, chainID) 
+                #res_number = int(resID) - GraphHDF5._get_starting_res(pdb_file, chainID) 
+                res_number = int(resID)
                 try:
-                    embedding = torch.load(pt_path)["representations"][33][res_number]
+                    embedding = torch.load(pt_path)["representations"][33][res_number - 1]
                     embedding_tersor[i] = embedding
                 except:
                     embedding_tersor[i] = torch.zeros(1280)
+            assert not torch.all(torch.eq(embedding_tersor, 0))
             f.create_dataset(f'/{mol}/node_data/embedding', data=embedding_tersor)
         print(f'Embedding added to the {outfile} file')
         f.close()
 
+    '''
     @staticmethod
     def _get_starting_res(pdb_file, chainID):
         """Get the starting residue in a chain"""
@@ -254,4 +257,4 @@ class GraphHDF5(object):
         structure = parser.get_structure("protein", pdb_file)
         chain = structure[0][chainID]
         start_res = next(chain.get_residues()).get_id()[1]
-        return start_res
+        return start_res'''
