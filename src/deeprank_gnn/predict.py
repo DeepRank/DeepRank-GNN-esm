@@ -12,6 +12,7 @@ import argparse
 import torch
 from Bio.PDB import PDBParser
 from Bio import PDB
+from Bio.PDB.Chain import Chain
 from Bio.PDB.Polypeptide import is_aa
 from esm import FastaBatchedDataset, pretrained
 
@@ -70,26 +71,32 @@ def setup_workspace(identificator: str) -> Path:
 def renumber_pdb(pdb_file_path: Path) -> None:
     """Renumber PDB file starting from 1 with no gaps."""
     log.info(f"Renumbering PDB file.")
-    parser = PDB.PDBParser(QUIET=True)
+    parser = PDBParser(QUIET=True)
     structure = parser.get_structure("pdb_structure", pdb_file_path)
 
-    chain_residue_map = {}
-    new_residue_number = 1
+    # Get the chain IDs
+    chain_ids = [chain.id for chain in structure[0]]
+    new_ids = ['A', 'B']
 
-    for model in structure:
-        for chain in model:
-            if chain.id not in chain_residue_map:
-                chain_residue_map[chain.id] = {}
-            
-            residue_number_map = {}
-            used_residue_numbers = set()
+    for index, chain_id in enumerate(chain_ids):
+        # Get the chain
+        chain = structure[0][chain_id]
+        chain.parent.detach_child(chain.id)
 
-            for residue in chain.get_residues():
-                while new_residue_number in used_residue_numbers:
-                    new_residue_number += 1
-                residue_number_map[residue.id[1]] = new_residue_number
-                used_residue_numbers.add(new_residue_number)
-                residue.id = (' ', new_residue_number, ' ')
+        # Create a new chain with a new ID
+        new_chain = Chain(new_ids[index])
+        
+        # Renumber residues in the chain starting from 1
+        residue_number = 1
+        for res in chain:
+            res = res.copy()
+            h, num, ins = res.id
+            res.id = (h, residue_number, ins)
+            new_chain.add(res)
+            residue_number += 1
+
+        # Add the new chain to the structure
+        structure[0].add(new_chain)
 
 
     # Save the modified structure to the same file path
@@ -309,6 +316,7 @@ def main():
     pdb_file = dst
 
     ## renumber PDB
+    #print(pdb_file)
     renumber_pdb(pdb_file_path=pdb_file)
     
     ## PDB to FASTA
