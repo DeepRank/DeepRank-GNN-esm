@@ -213,9 +213,11 @@ class ResidueGraph(Graph):
                             key, v, dist=d, type=bytes("interface", encoding="utf-8")
                         )
                     else:
-                        print("WARNING: {} is not a valid node".format(v))
+                        #print("WARNING: {} is not a valid node".format(v))
+                        pass
             else:
-                print("WARNING: {} is not a valid node".format(key))
+                #print("WARNING: {} is not a valid node".format(key))
+                pass
 
         # get the internal edges
         edges, dist = self.get_internal_edges(db)

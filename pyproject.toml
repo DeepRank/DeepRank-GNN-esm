@@ -1,10 +1,11 @@
-[tool]
+[project]
 name = "deeprank-gnn-esm"
 version = "0.1.0"
 description = "Graph Network for protein-protein interface including language model features"
-authors = ["Xiaotong Xu <x.xu1@uu.nl>"]
+authors = [
+    {name="Xiaotong Xu"}, {email="x.xu1@uu.nl>"}]
 readme = "README.md"
-license = "Apache 2.0"
+license = {file = "LICENSE"}
 classifiers=[
     'Development Status :: 2 - Pre-Alpha',
     'Intended Audience :: Developers',
@@ -13,13 +14,11 @@ classifiers=[
     'Topic :: Scientific/Engineering :: Chemistry'
 ]
 keywords = []
-include = [
-    "LICENSE",
-    "README.md",
-]
+# include = [
+#     "LICENSE",
+#     "README.md",
+# ]
 
-[tool.dependencies]
 
-[tool.dev-dependencies]
-
-[tool.scripts]
+[project.scripts]
+deeprank-gnn-esm-predict = "deeprank_gnn.predict:main"
