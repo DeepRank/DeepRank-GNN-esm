@@ -50,7 +50,7 @@ INCLUDE = ["mean", "per_tok"]
 NPROC = mp.cpu_count() - 1 if mp.cpu_count() > 1 else 1
 BATCH_SIZE = 64
 DEVICE_NAME = "cuda" if torch.cuda.is_available() else "cpu"  # configurable
-CHAIN_IDS = ["A", "E"] # configurable
+CHAIN_IDS = ["A", "E"]
 """
 added two parameters in NeuralNet: num_workers and batch_size 
 default batch_size is 32, default num_workers is 1 
