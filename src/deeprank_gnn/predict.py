@@ -10,10 +10,9 @@ from io import TextIOWrapper
 from pathlib import Path
 import argparse
 import torch
-from Bio.PDB import PDBParser
-from Bio import PDB
-from Bio.PDB.Chain import Chain
+from Bio.PDB import PDBParser, PDBIO, Structure, Model, Chain
 from Bio.PDB.Polypeptide import is_aa
+
 from esm import FastaBatchedDataset, pretrained
 
 from deeprank_gnn.ginet import GINet
@@ -40,20 +39,23 @@ log.addHandler(ch)
 # Constants
 # TODO: Make these configurable
 ESM_MODEL = "esm2_t33_650M_UR50D"
-GNN_ESM_MODEL = "paper_pretrained_models/scoring_of_docking_models/gnn_esm/treg_yfnat_b64_e20_lr0.001_foldall_esm.pth.tar"
+GNN_ESM_MODEL = (
+    Path(__file__).parent
+    / "paper_pretrained_models/scoring_of_docking_models/gnn_esm/treg_yfnat_b64_e20_lr0.001_foldall_esm.pth.tar"
+)
 TOKS_PER_BATCH = 4096
 REPR_LAYERS = [0, 32, 33]
-TRUNCATION_SEQ_LENGTH = 1022
+TRUNCATION_SEQ_LENGTH = 2500
 INCLUDE = ["mean", "per_tok"]
 NPROC = mp.cpu_count() - 1 if mp.cpu_count() > 1 else 1
 BATCH_SIZE = 64
-DEVICE_NAME = "cuda" if torch.cuda.is_available() else "cpu" #configurable 
-
-'''
+DEVICE_NAME = "cuda" if torch.cuda.is_available() else "cpu"  # configurable
+CHAIN_IDS = ["A", "E"] # configurable
+"""
 added two parameters in NeuralNet: num_workers and batch_size 
 default batch_size is 32, default num_workers is 1 
 for both, the higher the faster but depend on gpu capacity, should be configurable too
-'''
+"""
 ###########################################################
 
 
@@ -68,15 +70,21 @@ def setup_workspace(identificator: str) -> Path:
     #     log.info(f"WARNING: {workspace} already exists!")
     return workspace
 
-def renumber_pdb(pdb_file_path: Path) -> None:
+
+def renumber_pdb(pdb_file_path: Path, chain_ids: list) -> None:
     """Renumber PDB file starting from 1 with no gaps."""
     log.info(f"Renumbering PDB file.")
+
     parser = PDBParser(QUIET=True)
     structure = parser.get_structure("pdb_structure", pdb_file_path)
 
+    # Create a new structure with a new model
+    new_structure = Structure.Structure("renumbered_structure")
+    new_model = Model.Model(0)
+    new_structure.add(new_model)
+
     # Get the chain IDs
-    chain_ids = [chain.id for chain in structure[0]]
-    new_ids = ['A', 'B']
+    new_chain_ids = ["A", "B"]
 
     for index, chain_id in enumerate(chain_ids):
         # Get the chain
@@ -84,8 +92,8 @@ def renumber_pdb(pdb_file_path: Path) -> None:
         chain.parent.detach_child(chain.id)
 
         # Create a new chain with a new ID
-        new_chain = Chain(new_ids[index])
-        
+        new_chain = Chain.Chain(chain_id)
+
         # Renumber residues in the chain starting from 1
         residue_number = 1
         for res in chain:
@@ -95,15 +103,15 @@ def renumber_pdb(pdb_file_path: Path) -> None:
             new_chain.add(res)
             residue_number += 1
 
-        # Add the new chain to the structure
-        structure[0].add(new_chain)
-
+        # Add the new chain to the new model
+        new_chain.id = new_chain_ids[index]
+        new_model.add(new_chain)
 
     # Save the modified structure to the same file path
-    with open(str(pdb_file_path), 'w') as new_pdb_file:
-        io = PDB.PDBIO()
-        io.set_structure(structure)
-        io.save(new_pdb_file)
+    with open(pdb_file_path, "w") as pdb_file:
+        io = PDBIO()
+        io.set_structure(new_structure)
+        io.save(pdb_file)
 
 
 def pdb_to_fasta(pdb_file_path: Path, main_fasta_fh: TextIOWrapper) -> None:
@@ -112,8 +120,7 @@ def pdb_to_fasta(pdb_file_path: Path, main_fasta_fh: TextIOWrapper) -> None:
     parser = PDBParser()
     structure = parser.get_structure("structure", pdb_file_path)
 
-    chain_ids = [chain.id for chain in structure[0]]
-    for chain_id in chain_ids:
+    for chain_id in ["A", "B"]:
         chain = structure[0][chain_id]
         sequence = ""
 
@@ -182,7 +189,7 @@ def get_embedding(fasta_file: Path, output_dir: Path) -> None:
                 result = {"label": label}
                 truncate_len = min(TRUNCATION_SEQ_LENGTH, len(strs[i]))
                 # Call clone on tensors to ensure tensors are not views into a larger representation
-                #See https://github.com/pytorch/pytorch/issues/1995
+                # See https://github.com/pytorch/pytorch/issues/1995
                 if "per_tok" in INCLUDE:
                     result["representations"] = {
                         layer: t[i, 1 : truncate_len + 1].clone()
@@ -201,8 +208,7 @@ def get_embedding(fasta_file: Path, output_dir: Path) -> None:
                     result["contacts"] = contacts[i, :truncate_len, :truncate_len].clone()  # type: ignore
 
                 torch.save(
-                    result,
-                    output_file,
+                    result, output_file,
                 )
     log.info("#" * 80)
 
@@ -265,7 +271,6 @@ def predict(input: str, workspace_path: Path) -> str:
 def convert_to_csv(hdf5_path: str) -> str:
     """Convert the hdf5 file to csv."""
     hdf5_to_csv(hdf5_path)
-
     csv_path = str(hdf5_path).replace(".hdf5", ".csv")
 
     assert os.path.exists(csv_path), f"CSV file {csv_path} not found."
@@ -316,9 +321,9 @@ def main():
     pdb_file = dst
 
     ## renumber PDB
-    #print(pdb_file)
-    renumber_pdb(pdb_file_path=pdb_file)
-    
+    # print(pdb_file)
+    renumber_pdb(pdb_file_path=pdb_file, chain_ids=CHAIN_IDS)
+
     ## PDB to FASTA
     fasta_f = Path(workspace_path) / "all.fasta"
     with open(fasta_f, "w") as f:
@@ -342,3 +347,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
