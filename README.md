@@ -75,11 +75,11 @@ $ conda activate deeprank-gnn-esm-gpu-env
  2023-06-28 06:09:03,345 predict:226 INFO - Predicting fnat of protein complex.
  2023-06-28 06:09:03,345 predict:234 INFO - Using device: cuda:0
  # ...
- 2023-06-28 06:09:07,794 predict:280 INFO - Predicted fnat for 1B6C: 0.342
+ 2023-06-28 06:09:07,794 predict:280 INFO - Predicted fnat for 1B6C: 0.414
  2023-06-28 06:09:07,803 predict:290 INFO - Output written to /home/DeepRank-GNN-esm/1B6C-gnn_esm_pred/output.csv
 ```
 
-From the output above you can see that the predicted fnat for the 1B6C complex is **0.342**, this information is also written to the `output.csv` file.
+From the output above you can see that the predicted fnat for the 1B6C complex is **0.414**, this information is also written to the `output.csv` file.
 
 The command above will generate a folder in the current working directory, containing the following:
 
