@@ -9,27 +9,27 @@ With Anaconda
 
 1. Clone the repository
 ```bash
-$ git clone https://github.com/DeepRank/DeepRank-GNN-esm.git
-$ cd DeepRank-GNN-esm
+git clone https://github.com/DeepRank/DeepRank-GNN-esm.git
+cd DeepRank-GNN-esm
 ```
 
 2. Install either the CPU or GPU version of DeepRank-GNN-esm
 ```bash
-$ conda env create -f environment-cpu.yml && conda activate deeprank-gnn-esm-cpu-env
+conda env create -f environment-cpu.yml && conda activate deeprank-gnn-esm-cpu-env
 ```
 OR
 ```bash
-$ conda env create -f environment-gpu.yml && conda activate deeprank-gnn-esm-gpu-env
+conda env create -f environment-gpu.yml && conda activate deeprank-gnn-esm-gpu-env
 ```
 
 3. Install the command line tool
 ```bash
-$ pip install .
+pip install .
 ```
 
 4. Run the tests to make sure everything is working
 ```bash
-$ pytest tests/
+pytest tests/
 ```
 
 ## Usage
