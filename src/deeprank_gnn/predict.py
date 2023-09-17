@@ -42,12 +42,12 @@ ESM_MODEL = "esm2_t33_650M_UR50D"
 GNN_ESM_MODEL = "paper_pretrained_models/scoring_of_docking_models/gnn_esm/treg_yfnat_b64_e20_lr0.001_foldall_esm.pth.tar"
 TOKS_PER_BATCH = 4096
 REPR_LAYERS = [0, 32, 33]
-TRUNCATION_SEQ_LENGTH = 2500
+TRUNCATION_SEQ_LENGTH = 2000
 INCLUDE = ["mean", "per_tok"]
 NPROC = mp.cpu_count() - 1 if mp.cpu_count() > 1 else 1
 BATCH_SIZE = 64
 DEVICE_NAME = "cuda" if torch.cuda.is_available() else "cpu"  # configurable
-CHAIN_IDS = ["A", "B"]
+
 """
 added two parameters in NeuralNet: num_workers and batch_size 
 default batch_size is 32, default num_workers is 1 
@@ -304,11 +304,15 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("pdb_file", help="Path to the PDB file.")
+    parser.add_argument("chain_id_1", help="First chain ID.")
+    parser.add_argument("chain_id_2", help="Second chain ID.")
     args = parser.parse_args()
 
     pdb_file = args.pdb_file
+    chain_id_1 = args.chain_id_1
+    chain_id_2 = args.chain_id_2
 
-    identificator = Path(pdb_file).stem + "-gnn_esm_pred"
+    identificator = Path(pdb_file).stem + f"-gnn_esm_pred_{chain_id_1}_{chain_id_2}"
     workspace_path = setup_workspace(identificator)
 
     # Copy PDB file to workspace
@@ -318,8 +322,7 @@ def main():
     pdb_file = dst
 
     ## renumber PDB
-    # print(pdb_file)
-    renumber_pdb(pdb_file_path=pdb_file, chain_ids=CHAIN_IDS)
+    renumber_pdb(pdb_file_path=pdb_file, chain_ids=[chain_id_1, chain_id_2])
 
     ## PDB to FASTA
     fasta_f = Path(workspace_path) / "all.fasta"
@@ -336,11 +339,10 @@ def main():
     csv_output = predict(input=graph, workspace_path=workspace_path)
 
     ## Present the results
-    parse_output(csv_output=csv_output, workspace_path=workspace_path, chain_ids=CHAIN_IDS)
+    parse_output(csv_output=csv_output, workspace_path=workspace_path, chain_ids=[chain_id_1, chain_id_2])
 
     # ## Clean workspace
     # shutil.rmtree(workspace_path)
-
 
 if __name__ == "__main__":
     main()
