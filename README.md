@@ -39,11 +39,12 @@ $ pytest tests/
 We provide a command-line interface for DeepRank-GNN-ESM that can be used to score protein-protein complexes. The command-line interface can be used as follows:
 
 ```bash
-$ deeprank-gnn-esm-predict -h
-usage: deeprank-gnn-esm-predict [-h] pdb_file
+usage: deeprank-gnn-esm-predict [-h] pdb_file chain_id_1 chain_id_2
 
 positional arguments:
   pdb_file    Path to the PDB file.
+  chain_id_1  First chain ID.
+  chain_id_2  Second chain ID.
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -57,34 +58,33 @@ $ wget https://files.rcsb.org/view/1B6C.pdb -q
 
 # make sure the environment is activated
 $ conda activate deeprank-gnn-esm-gpu-env
-(deeprank-gnn-esm-gpu-env) $ deeprank-gnn-esm-predict 1B6C.pdb
- 2023-06-28 06:08:21,889 predict:64 INFO - Setting up workspace - /home/DeepRank-GNN-esm/1B6C-gnn_esm_pred
+(deeprank-gnn-esm-gpu-env) $ deeprank-gnn-esm-predict 1B6C.pdb A B
+ 2023-06-28 06:08:21,889 predict:64 INFO - Setting up workspace - /home/DeepRank-GNN-esm/1B6C-gnn_esm_pred_A_B
  2023-06-28 06:08:21,945 predict:72 INFO - Renumbering PDB file.
  2023-06-28 06:08:22,294 predict:104 INFO - Reading sequence of PDB 1B6C.pdb
  2023-06-28 06:08:22,423 predict:131 INFO - Generating embedding for protein sequence.
  2023-06-28 06:08:22,423 predict:132 INFO - ################################################################################
  2023-06-28 06:08:32,447 predict:138 INFO - Transferred model to GPU
- 2023-06-28 06:08:32,450 predict:147 INFO - Read /home/DeepRank-GNN-esm/1B6C-gnn_esm_pred/all.fasta with 8 sequences
- 2023-06-28 06:08:32,459 predict:157 INFO - Processing 1 of 2 batches (4 sequences)
- 2023-06-28 06:08:34,061 predict:157 INFO - Processing 2 of 2 batches (4 sequences)
+ 2023-06-28 06:08:32,450 predict:147 INFO - Read /home/1B6C-gnn_esm_pred_A_B/all.fasta with 2 sequences
+ 2023-06-28 06:08:32,459 predict:157 INFO - Processing 1 of 1 batches (2 sequences)
  2023-06-28 06:08:36,462 predict:200 INFO - ################################################################################
  2023-06-28 06:08:36,470 predict:205 INFO - Generating graph, using 79 processors
  Graphs added to the HDF5 file
- Embedding added to the /home/DeepRank-GNN-esm/1B6C-gnn_esm_pred/graph.hdf5 file
- 2023-06-28 06:09:03,345 predict:220 INFO - Graph file generated: /home/DeepRank-GNN-esm/1B6C-gnn_esm_pred/graph.hdf5
+ Embedding added to the /home/1B6C-gnn_esm_pred_A_B/graph.hdf5 file file
+ 2023-06-28 06:09:03,345 predict:220 INFO - Graph file generated: /home/DeepRank-GNN-esm/1B6C-gnn_esm_pred_A_B/graph.hdf5
  2023-06-28 06:09:03,345 predict:226 INFO - Predicting fnat of protein complex.
  2023-06-28 06:09:03,345 predict:234 INFO - Using device: cuda:0
  # ...
- 2023-06-28 06:09:07,794 predict:280 INFO - Predicted fnat for 1B6C: 0.414
+ 2023-06-28 06:09:07,794 predict:280 INFO - Predicted fnat for 1B6C between chainA and chainB: 0.359
  2023-06-28 06:09:07,803 predict:290 INFO - Output written to /home/DeepRank-GNN-esm/1B6C-gnn_esm_pred/output.csv
 ```
 
-From the output above you can see that the predicted fnat for the 1B6C complex is **0.414**, this information is also written to the `output.csv` file.
+From the output above you can see that the predicted fnat for the 1B6C complex between chainA and chainB is **0.359**, this information is also written to the `output.csv` file.
 
 The command above will generate a folder in the current working directory, containing the following:
 
 ```
-1B6C-gnn_esm_pred
+1B6C-gnn_esm_pred_A_B
 ├── 1B6C.A.pt
 ├── 1B6C.B.pt
 ├── 1B6C.pdb
