@@ -14,6 +14,9 @@ import numpy as np
 
 from time import time
 
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
 
 def plot_graph(graph, cluster):
 
