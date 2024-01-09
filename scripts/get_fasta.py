@@ -1,58 +1,44 @@
 import argparse
 import os
-import re
 from pdb2sql import pdb2sql
 
-One2ThreeDict = {
-    'A': 'ALA', 'R': 'ARG', 'N': 'ASN', 'D': 'ASP', 'C': 'CYS', 'E': 'GLU', 'Q': 'GLN',
-    'G': 'GLY', 'H': 'HIS', 'I': 'ILE', 'L': 'LEU', 'K': 'LYS', 'M': 'MET', 'F': 'PHE',
-    'P': 'PRO', 'S': 'SER', 'T': 'THR', 'W': 'TRP', 'Y': 'TYR', 'V': 'VAL',
-    'B': 'ASX', 'U': 'SEC', 'Z': 'GLX'
-}
+One2ThreeDict = {'A': 'ALA', 'R': 'ARG', 'N': 'ASN', 'D': 'ASP', 'C': 'CYS', 'E': 'GLU', 'Q': 'GLN',
+                 'G': 'GLY', 'H': 'HIS', 'I': 'ILE', 'L': 'LEU', 'K': 'LYS', 'M': 'MET', 'F': 'PHE',
+                 'P': 'PRO', 'S': 'SER', 'T': 'THR', 'W': 'TRP', 'Y': 'TYR', 'V': 'VAL',
+                 'B': 'ASX', 'U': 'SEC', 'Z': 'GLX'}
+
 Three2OneDict = {v: k for k, v in One2ThreeDict.items()}
 
 
-def get_fasta(pdb_dir, pdb, output_dir):
-    pdb_path = os.path.join(pdb_dir, pdb)
+def get_fasta(pdb_path, output_fasta_dir):
     sqldb = pdb2sql(pdb_path)
+    
     for chain_id in ('A', 'B'):
-        # Get the unique residues
         residues = sqldb.get_residues(chainID=chain_id)
-        # Get the one-letter residue code
-        seq = ''
-        count = 0
-        for residue in residues:
-            seq += Three2OneDict[residue[1]]
-            count += 1
-            if count == 79:
-                seq += '\n'
-                count = 0
-        # Write the file
-        case_id = re.split('_|\.', os.path.basename(pdb))[0]
-        out_dir = os.path.join(output_dir, case_id)
-        os.makedirs(out_dir, exist_ok=True)
-        fname = os.path.join(out_dir, f'{case_id}.{chain_id}.fasta')
-        with open(fname, 'w') as f:
+        seq = ''.join(Three2OneDict[residue[1]] for residue in residues)
+        
+        case_id = os.path.basename(pdb_path).split('.')[0]
+        output_file = os.path.join(output_fasta_dir, f'{case_id}.{chain_id}.fasta')
+
+        with open(output_file, 'w') as f:
             f.write(f'>{case_id}.{chain_id}\n')
-            f.write(seq)
+            f.write('\n'.join([seq[i:i+79] for i in range(0, len(seq), 79)]))
 
 
-def combine_fasta_files(pdb_dir, output_fasta_name):
-    fasta_dir = os.path.join(pdb_dir, 'fasta_files')
-    os.makedirs(fasta_dir, exist_ok=True)
+def combine_fasta_files(fasta_dir, output_fasta_name):
     os.system(f"sed -n 'p' {fasta_dir}/*.fasta > {output_fasta_name}")
 
 
 def main(pdb_dir, output_fasta_name):
-    files = os.listdir(pdb_dir)
-    pdbs = [f for f in files if f.endswith('.pdb')]
+    fasta_dir = os.path.join(pdb_dir, 'fasta_files')
+    os.makedirs(fasta_dir, exist_ok=True)
 
-    # Generate FASTA files
-    for pdb in pdbs:
-        get_fasta(pdb_dir, pdb, output_dir='fasta_files')
+    for pdb_file in os.listdir(pdb_dir):
+        if pdb_file.endswith('.pdb'):
+            pdb_path = os.path.join(pdb_dir, pdb_file)
+            get_fasta(pdb_path, output_fasta_dir=fasta_dir)
 
-    # Combine the FASTA files
-    combine_fasta_files(pdb_dir, output_fasta_name)
+    combine_fasta_files(fasta_dir, output_fasta_name)
     print('Fasta files generated for all PDB files')
 
 
