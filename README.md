@@ -167,7 +167,7 @@ The command above will generate a folder in the current working directory, conta
     target = "fnat"
     edge_attr = ["dist"]
     threshold = 0.3
-    pretrained_model = deeprank-GNN-esm/paper_pretrained_models/scoring_of_docking_models/gnn_esm/treg_yfnat_b64_e20_lr0.001_foldall_esm.pth.tar
+    pretrained_model = "deeprank-GNN-esm/paper_pretrained_models/scoring_of_docking_models/gnn_esm/treg_yfnat_b64_e20_lr0.001_foldall_esm.pth.tar"
     node_feature = ["type", "polarity", "bsa", "charge", "embedding"]
     device_name = "cuda:0"
     num_workers = 10
@@ -185,3 +185,5 @@ The command above will generate a folder in the current working directory, conta
 
     model.test(hdf5 = "tmpdir/GNN_esm_prediction.hdf5")
     ```
+### Note about input pdb files 
+To make sure the mapping between interface residue and ems-2 embeddings are correct, make sure that for all the chains, residue numbering in the PDB file is continuous and start with residue '1'.
