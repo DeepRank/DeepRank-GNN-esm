@@ -186,4 +186,4 @@ The command above will generate a folder in the current working directory, conta
     model.test(hdf5 = "tmpdir/GNN_esm_prediction.hdf5")
     ```
 ### Note about input pdb files 
-To make sure the mapping between interface residue and ems-2 embeddings are correct, make sure that for all the chains, residue numbering in the PDB file is continuous and start with residue '1'.
+To make sure the mapping between interface residue and ems-2 embeddings are correct, make sure that for all the chains, residue numbering in the PDB file is continuous and starts with residue '1'. We provide a script (scripts/pdb_renumber.py) to do the numbering.
