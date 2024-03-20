@@ -76,22 +76,22 @@ $ conda activate deeprank-gnn-esm-gpu-env
  2023-06-28 06:09:03,345 predict:234 INFO - Using device: cuda:0
  # ...
  2023-06-28 06:09:07,794 predict:280 INFO - Predicted fnat for 1B6C between chainA and chainB: 0.359
- 2023-06-28 06:09:07,803 predict:290 INFO - Output written to /home/DeepRank-GNN-esm/1B6C-gnn_esm_pred/output.csv
+ 2023-06-28 06:09:07,803 predict:290 INFO - Output written to /home/DeepRank-GNN-esm/1B6C-gnn_esm_pred/GNN_esm_prediction.csv
 ```
 
-From the output above you can see that the predicted fnat for the 1B6C complex between chainA and chainB is **0.359**, this information is also written to the `output.csv` file.
+From the output above you can see that the predicted fnat for the 1B6C complex between chainA and chainB is **0.359**, this information is also written to the `GNN_esm_prediction.csv` file.
 
 The command above will generate a folder in the current working directory, containing the following:
 
 ```
 1B6C-gnn_esm_pred_A_B
-├── 1B6C.A.pt
-├── 1B6C.B.pt
-├── 1B6C.pdb
-├── GNN_esm_prediction.csv
-├── GNN_esm_prediction.hdf5
-├── graph.hdf5
-└── output.csv
+├── 1B6C.pdb                   #input pdb file 
+├── all.fasta                  #fasta sequence for the pdb input 
+├── 1B6C.A.pt                  #esm-2 embedding for chainA in protein 1B6C
+├── 1B6C.B.pt                  #esm-2 embedding for chainB in protein 1B6C
+├── graph.hdf5                 #input protein graph in hdf5 format 
+├── GNN_esm_prediction.hdf5    #prediction output in hdf5 format
+└── GNN_esm_prediction.csv     #prediction output in csv format 
 ```
 
 * * *
