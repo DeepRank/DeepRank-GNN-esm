@@ -290,14 +290,14 @@ def parse_output(csv_output: str, workspace_path: Path, chain_ids: list) -> None
             log.info(f"Predicted fnat for {pdb_id} between chain{chain_ids[0]} and chain{chain_ids[1]}: {predicted_fnat:.3f}")
             _data.append([pdb_id, predicted_fnat])
 
-    output_fname = Path(workspace_path, "output.csv")
-    with open(output_fname, "w") as f:
+    #output_fname = Path(workspace_path, "output.csv")
+    with open(csv_output, "w") as f:
         f.write("pdb_id,predicted_fnat\n")
         for entry in _data:
             pdb, fnat = entry
             f.write(f"{pdb},{fnat:.3f}\n")
 
-    log.info(f"Output written to {output_fname}")
+    log.info(f"Output written to {csv_output}")
 
 
 def main():
