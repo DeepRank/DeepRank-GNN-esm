@@ -98,7 +98,7 @@ The command above will generate a folder in the current working directory, conta
 ### As a framework
 
 
-#### Generate ems-2 embeddings for your protein
+#### Generate esm-2 embeddings for your protein
 1. Generate fasta sequence in bulk, use script 'get_fasta.py'
     ```bash
     usage: get_fasta.py [-h] pdb_dir output_fasta_name
@@ -186,4 +186,4 @@ The command above will generate a folder in the current working directory, conta
     model.test(hdf5 = "tmpdir/GNN_esm_prediction.hdf5")
     ```
 ### Note about input pdb files 
-To make sure the mapping between interface residue and ems-2 embeddings are correct, make sure that for all the chains, residue numbering in the PDB file is continuous and starts with residue '1'. We provide a script (scripts/pdb_renumber.py) to do the numbering.
+To make sure the mapping between interface residue and esm-2 embeddings is correct, make sure that for all the chains, residue numbering in the PDB file is continuous and starts with residue '1'. We provide a script (scripts/pdb_renumber.py) to do the numbering.
