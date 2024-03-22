@@ -1,4 +1,15 @@
-[![build](https://github.com/haddocking/DeepRank-GNN-esm/actions/workflows/build.yml/badge.svg)](https://github.com/haddocking/DeepRank-GNN-esm/actions/workflows/build.yml)
+
+# :bell: Archiving Note
+
+Since DeepRank-GNN is no longer in active development, we migrated our DeepRank-GNN-esm version to our new repo at [haddocking/DeepRank-GNN-esm](https://github.com/haddocking/DeepRank-GNN-esm). 
+
+For details refer to our publication at https://academic.oup.com/bioinformaticsadvances/article/4/1/vbad191/7511844
+
+
+:snowflake: This repository is now frozen. :snowflake:
+
+
+
 
 # DeepRank-GNN-esm
 Graph Network for protein-protein interface including language model features
