@@ -3,7 +3,8 @@
 
 Since DeepRank-GNN is no longer in active development, we migrated our DeepRank-GNN-esm version to our new repo at [haddocking/DeepRank-GNN-esm](https://github.com/haddocking/DeepRank-GNN-esm). 
 
-For details refer to our publication at https://academic.oup.com/bioinformaticsadvances/article/4/1/vbad191/7511844
+For details refer to our publication "DeepRank-GNN-esm: a graph neural network for scoring protein–protein models using protein language model"
+at https://academic.oup.com/bioinformaticsadvances/article/4/1/vbad191/7511844
 
 
 :snowflake: This repository is now frozen. :snowflake:
